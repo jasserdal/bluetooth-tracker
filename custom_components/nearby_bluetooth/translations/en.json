@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Nearby Bluetooth Radar",
+        "description": "Listen for nearby Bluetooth advertisements. Distance is an estimate and depends on your environment.",
+        "data": {
+          "name": "Integration name",
+          "tx_power": "RSSI at 1 metre (calibration)",
+          "path_loss": "Environment path-loss factor",
+          "alert_new": "Create a notification for newly seen devices",
+          "min_rssi": "Minimum RSSI to trigger a notification"
+        }
+      }
+    },
+    "abort": { "already_configured": "Already configured" }
+  },
+  "entity": {
+    "sensor": {
+      "rssi": { "name": "Signal strength" },
+      "distance": { "name": "Estimated distance" },
+      "manufacturer": { "name": "Manufacturer" },
+      "last_seen": { "name": "Last seen" }
+    }
+  }
+}
+
