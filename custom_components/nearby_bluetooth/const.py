@@ -1,0 +1,9 @@
+DOMAIN = "nearby_bluetooth"
+CONF_TX_POWER = "tx_power"
+CONF_PATH_LOSS = "path_loss"
+CONF_ALERT_NEW = "alert_new"
+CONF_MIN_RSSI = "min_rssi"
+DEFAULT_TX_POWER = -59
+DEFAULT_PATH_LOSS = 2.0
+DEFAULT_MIN_RSSI = -100
+PLATFORMS = ["sensor"]
