@@ -1,4 +1,4 @@
-"""Passive Bluetooth advertisement tracker."""
+""""Passive Bluetooth advertisement tracker."""
 from __future__ import annotations
 
 import logging
@@ -17,7 +17,7 @@ from .const import CONF_ALERT_NEW, CONF_MIN_RSSI, CONF_PATH_LOSS, CONF_TX_POWER,
 
 _LOGGER = logging.getLogger(__name__)
 STORAGE_VERSION = 1
-PANEL_VERSION = "0.2.0"
+PANEL_VERSION = "0.2.1"
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
@@ -167,3 +167,4 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN].pop(entry.entry_id)
         frontend.async_remove_panel(hass, DOMAIN, warn_if_unknown=False)
     return unload_ok
+"
