@@ -1,4 +1,4 @@
-""""Passive Bluetooth advertisement tracker."""
+"""Passive Bluetooth advertisement tracker."""
 from __future__ import annotations
 
 import logging
@@ -167,4 +167,3 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN].pop(entry.entry_id)
         frontend.async_remove_panel(hass, DOMAIN, warn_if_unknown=False)
     return unload_ok
-"
