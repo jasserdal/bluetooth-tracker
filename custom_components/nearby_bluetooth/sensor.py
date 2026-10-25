@@ -72,6 +72,20 @@ class BluetoothDeviceSensor(SensorEntity):
             return device.manufacturer
         return device.last_seen
 
+    @property
+    def extra_state_attributes(self) -> dict[str, str | int | float]:
+        """Expose one normalized device record for the sidebar radar."""
+        device = self.data.devices[self.address]
+        return {
+            "nearby_bluetooth_domain": DOMAIN,
+            "address": device.address,
+            "device_name": device.name,
+            "manufacturer": device.manufacturer,
+            "rssi": device.rssi,
+            "distance": device.distance,
+            "last_seen": device.last_seen.isoformat(),
+        }
+
     @callback
     def _handle_update(self) -> None:
         device = self.data.devices[self.address]
@@ -85,4 +99,3 @@ class BluetoothDeviceSensor(SensorEntity):
         self.data.async_add_listener(self._handle_update)
         self.async_on_remove(lambda: self.data.listeners.remove(self._handle_update)
                              if self._handle_update in self.data.listeners else None)
-

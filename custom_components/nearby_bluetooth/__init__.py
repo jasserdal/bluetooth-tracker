@@ -4,8 +4,10 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from pathlib import Path
 
-from homeassistant.components import bluetooth
+from homeassistant.components import bluetooth, frontend, panel_custom
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -15,6 +17,16 @@ from .const import CONF_ALERT_NEW, CONF_MIN_RSSI, CONF_PATH_LOSS, CONF_TX_POWER,
 
 _LOGGER = logging.getLogger(__name__)
 STORAGE_VERSION = 1
+PANEL_VERSION = "0.2.0"
+
+
+async def async_setup(hass: HomeAssistant, config: dict) -> bool:
+    """Serve the integration's sidebar panel assets."""
+    static_dir = Path(__file__).parent / "static"
+    await hass.http.async_register_static_paths(
+        [StaticPathConfig(f"/api/{DOMAIN}/static", str(static_dir), cache_headers=False)]
+    )
+    return True
 
 
 @dataclass
@@ -138,10 +150,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass, handle, {"connectable": False}, bluetooth.BluetoothScanningMode.PASSIVE
     ))
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    if DOMAIN not in hass.data.get("frontend_panels", {}):
+        await panel_custom.async_register_panel(
+            hass,
+            webcomponent_name="nearby-bluetooth-panel",
+            frontend_url_path=DOMAIN,
+            sidebar_title="Bluetooth Radar",
+            sidebar_icon="mdi:radar",
+            module_url=f"/api/{DOMAIN}/static/panel.js?v={PANEL_VERSION}",
+        )
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
+        frontend.async_remove_panel(hass, DOMAIN, warn_if_unknown=False)
     return unload_ok

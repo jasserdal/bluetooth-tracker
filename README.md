@@ -2,6 +2,8 @@
 
 A custom integration that listens to Bluetooth advertisements through Home Assistant's shared Bluetooth stack. It creates a device with signal strength, estimated distance, manufacturer, and last-seen sensors for each MAC address. New devices can generate a persistent notification and a `nearby_bluetooth_device_discovered` event for automations.
 
+The **Bluetooth Radar** sidebar panel lists every discovered device and its last-seen time, and plots the ten most recently seen devices by estimated distance. Radar angles only separate points visually; a single Bluetooth receiver cannot determine direction from RSSI.
+
 ## Install
 
 Copy `custom_components/nearby_bluetooth` into your Home Assistant `config/custom_components/` directory, restart Home Assistant, then add **Nearby Bluetooth Radar** from **Settings → Devices & services → Add integration**. A working Bluetooth adapter or ESPHome Bluetooth proxy is needed.
