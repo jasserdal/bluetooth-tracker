@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
-from homeassistant.const import UnitOfLength, UnitOfSignalStrength
+from homeassistant.const import UnitOfLength
 from homeassistant.core import callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -48,7 +48,8 @@ class BluetoothDeviceSensor(SensorEntity):
             connections={("bluetooth", address)},
         )
         if kind == "rssi":
-            self._attr_native_unit_of_measurement = UnitOfSignalStrength.DECIBELS_MILLIWATT
+            # Use the literal to support HA builds that do not export this enum.
+            self._attr_native_unit_of_measurement = "dBm"
             self._attr_icon = "mdi:bluetooth"
         elif kind == "distance":
             self._attr_native_unit_of_measurement = UnitOfLength.METERS
@@ -84,3 +85,4 @@ class BluetoothDeviceSensor(SensorEntity):
         self.data.async_add_listener(self._handle_update)
         self.async_on_remove(lambda: self.data.listeners.remove(self._handle_update)
                              if self._handle_update in self.data.listeners else None)
+
