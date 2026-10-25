@@ -57,6 +57,12 @@ class NearbyBluetoothPanel extends HTMLElement {
     const latest = allDevices.slice(0, 10);
     const maxDistance = latest.reduce((max, device) => Math.max(max, device.distance || 0), 0);
     const radarRange = this._niceRange(Math.max(maxDistance, 5));
+    const rangeTicks = [0.25, 0.5, 0.75, 1]
+      .map((fraction) => {
+        const radius = fraction * 182;
+        return `<text class="range-tick" x="215" y="${(210 - radius + 4).toFixed(1)}">${this._formatDistance(radarRange * fraction)}</text>`;
+      })
+      .join("");
     const listRows = allDevices.length
       ? allDevices.map((device) => this._deviceRow(device)).join("")
       : `<div class="empty-list">Inga Bluetooth-enheter har hittats ännu.</div>`;
@@ -91,6 +97,7 @@ class NearbyBluetoothPanel extends HTMLElement {
         .grid { position: absolute; inset: 0; width: 100%; height: 100%; }
         .grid circle, .grid line { fill: none; stroke: var(--radar-line); stroke-width: 1; }
         .grid .outer { stroke: rgba(98,243,211,.52); }
+        .grid .range-tick { fill: #c9fff2; stroke: rgba(5,20,24,.8); stroke-width: 2px; paint-order: stroke; font: 9px Roboto, sans-serif; }
         .sweep { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0deg, transparent 300deg, rgba(98,243,211,.02) 325deg, rgba(98,243,211,.31) 359deg, transparent 360deg); animation: rotate 7s linear infinite; }
         @keyframes rotate { to { transform: rotate(360deg); } }
         .points { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
@@ -137,6 +144,7 @@ class NearbyBluetoothPanel extends HTMLElement {
                   <line x1="210" y1="15" x2="210" y2="405"></line>
                   <line x1="72" y1="72" x2="348" y2="348"></line>
                   <line x1="348" y1="72" x2="72" y2="348"></line>
+                  ${rangeTicks}
                 </svg>
                 <svg class="points" viewBox="0 0 420 420" role="img" aria-label="Enhetspositioner baserade på uppskattat avstånd">
                   ${radarPoints}
@@ -233,3 +241,4 @@ class NearbyBluetoothPanel extends HTMLElement {
 if (!customElements.get("nearby-bluetooth-panel")) {
   customElements.define("nearby-bluetooth-panel", NearbyBluetoothPanel);
 }
+
